@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import os, sys, time
+reload = sys.modules['imp' if 'imp' in sys.modules else 'importlib'].reload
+
 import pure_python_theil_sen
 reload(pure_python_theil_sen)
 ppts = pure_python_theil_sen
@@ -26,8 +29,11 @@ data_points = sorted(test_data)
 foc_vals, fwhm_avg, fwhm_med = zip(*data_points)
 icept, slope = ppts.linefit(foc_vals, fwhm_avg)
 
+## Calculate residuals:
+res_avg = [(y - icept - slope*x) for x,y,_ in data_points]
+res_med = [(y - icept - slope*x) for x,_,y in data_points]
 
-## Best-fit line for plottin:
+## Best-fit line for plotting:
 ts_x = [min(foc_vals), max(foc_vals)]
 ts_y = [(icept + slope*x) for x in ts_x]
 
